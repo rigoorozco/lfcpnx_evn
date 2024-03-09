@@ -1,5 +1,11 @@
 // LFCPNX-EVN BRAM for picoRV
 
+`ifndef SIM_FIRMWARE_FILE
+  `define FIRMWARE_FILE "firmware.hex"
+`else
+  `define FIRMWARE_FILE `SIM_FIRMWARE_FILE
+`endif
+
 module bram_simple_sp #(
   parameter ADDR_WIDTH = 8
 ) (
@@ -11,7 +17,7 @@ module bram_simple_sp #(
 );
 
 reg [31:0] mem [(1<<ADDR_WIDTH)-1:0];
-// initial $readmemh ("ram.hex", mem);
+initial $readmemh (`FIRMWARE_FILE, mem);
     
 always @(posedge clk) begin
     if (we[0]) mem[addr] <= din[ 7: 0];

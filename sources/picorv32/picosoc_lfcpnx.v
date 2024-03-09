@@ -157,7 +157,7 @@ wire uart_reg_dat_sel = mem_valid && (mem_addr == 32'h0200_0008);
 reg ram_ready;
 
 always @(posedge clk)
-    ram_ready <= mem_valid && !mem_ready && mem_addr < 4*MEM_WORDS;
+    ram_ready <= (mem_la_read || mem_la_write) && !mem_ready && mem_la_addr < 4*MEM_WORDS;
 
 // Drive picoRV inputs
 assign mem_ready = ram_ready ||

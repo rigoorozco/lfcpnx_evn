@@ -37,7 +37,9 @@ initial begin
     repeat(1000) @(posedge external_clock);
     external_resetn = 1;
 
-    repeat(1000000) @(posedge external_clock);
+    while (!trap) begin
+        @(posedge external_clock);
+    end
 
     $stop(0);
 end

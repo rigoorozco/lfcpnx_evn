@@ -4,12 +4,12 @@ module picosoc_lfcpnx #(
 	parameter [ 0:0] ENABLE_COUNTERS      = 1,
 	parameter [ 0:0] ENABLE_COUNTERS64    = 1,
 	parameter [ 0:0] ENABLE_REGS_16_31    = 1,
-	parameter [ 0:0] ENABLE_REGS_DUALPORT = 1,
+	parameter [ 0:0] ENABLE_REGS_DUALPORT = 0,
 	parameter [ 0:0] TWO_STAGE_SHIFT      = 1,
 	parameter [ 0:0] BARREL_SHIFTER       = 0,
 	parameter [ 0:0] TWO_CYCLE_COMPARE    = 0,
 	parameter [ 0:0] TWO_CYCLE_ALU        = 0,
-	parameter [ 0:0] COMPRESSED_ISA       = 0,
+	parameter [ 0:0] COMPRESSED_ISA       = 1,
 	parameter [ 0:0] CATCH_MISALIGN       = 1,
 	parameter [ 0:0] CATCH_ILLINSN        = 1,
 	parameter [ 0:0] ENABLE_PCPI          = 0,
@@ -136,7 +136,9 @@ wire [31:0] uart_reg_dat_di;
 wire [31:0] uart_reg_dat_do;
 wire        uart_reg_dat_wait;
 
-simpleuart uart (
+simpleuart #(
+    .DEFAULT_DIV (54)
+) uart (
     .clk         (uart_clk),
     .resetn      (uart_resetn),
     .ser_tx      (uart_ser_tx),
@@ -154,13 +156,17 @@ simpleuart uart (
 wire uart_reg_div_sel = mem_valid && (mem_addr == 32'h0200_0004);
 wire uart_reg_dat_sel = mem_valid && (mem_addr == 32'h0200_0008);
 
+wire test_addr_sel = mem_valid && (mem_addr == 32'h1000_0000);
+wire done_addr_sel = mem_valid && (mem_addr == 32'h2000_0000);
+
 reg ram_ready;
 
 always @(posedge clk)
-    ram_ready <= (mem_la_read || mem_la_write) && !mem_ready && mem_la_addr < 4*MEM_WORDS;
+    ram_ready <= (mem_la_read || mem_la_write) && mem_la_addr < 4*MEM_WORDS;
 
 // Drive picoRV inputs
 assign mem_ready = ram_ready ||
+    test_addr_sel || done_addr_sel ||
     uart_reg_div_sel || (uart_reg_dat_sel && !uart_reg_dat_wait);
 
 assign mem_rdata =

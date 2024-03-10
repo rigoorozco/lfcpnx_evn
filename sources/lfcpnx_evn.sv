@@ -1,11 +1,17 @@
 // LFCPNX-EVN Top Level
 
 module lfcpnx_evn (
-    input  external_clock,
-    input  external_resetn,
+    input         external_clock,
+    input         external_resetn,
 
-    input  uart_rx,
-    output uart_tx
+`ifdef SIM
+    output [35:0] trace_data,
+    output        trace_valid,
+    output        trap,
+`endif
+
+    input         uart_rx,
+    output        uart_tx
 );
 
 wire        picosoc_clk;
@@ -53,5 +59,9 @@ assign picosoc_ser_rx    = uart_rx;
 assign picosoc_clk       = external_clock;
 assign picosoc_resetn    = external_resetn;
 assign picosoc_irq       = test_irq;
+
+assign trace_data  = picosoc_trace_data;
+assign trace_valid = picosoc_trace_valid;
+assign trap        = picosoc_trap;
 
 endmodule

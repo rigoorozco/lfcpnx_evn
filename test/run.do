@@ -17,7 +17,8 @@ vlog -sv -mfcu \
 	"/home/rigo/code/lfcpnx_evn/submodules/picorv32/picorv32.v" \
 	"/home/rigo/code/lfcpnx_evn/submodules/picorv32/picosoc/simpleuart.v" \
 	"/home/rigo/code/lfcpnx_evn/test/lfcpnx_evn_tb.sv"\
-+define+SIM_FIRMWARE_FILE="../sources/picorv32/firmware.hex" \
++define+SIM_FIRMWARE_FILE="../firmware/test/firmware.hex" \
++define+SIM=1 \
 
 vsim \
 	-L work -L pmi_work -L ovi_lfcpnx \
@@ -25,7 +26,8 @@ vsim \
 	lfcpnx_evn_tb 
 
 view wave
-add wave /*
+add wave /dut/*
+add wave /dut/picosoc/*
 add wave /dut/picosoc/ram/mem
 
 run -all

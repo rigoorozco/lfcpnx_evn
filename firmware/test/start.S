@@ -480,7 +480,7 @@ start:
 #endif
 
 	/* print "DONE\n" */
-	lui a0,0x02000008>>12
+	lui a0,0x10000000>>12
 	addi a1,zero,'D'
 	addi a2,zero,'O'
 	addi a3,zero,'N'

@@ -153,10 +153,9 @@ simpleuart #(
     .reg_dat_wait(uart_reg_dat_wait)
 );
 
-wire uart_reg_div_sel = mem_valid && (mem_addr == 32'h0200_0004);
-wire uart_reg_dat_sel = mem_valid && (mem_addr == 32'h0200_0008);
+wire uart_reg_dat_sel = mem_valid && (mem_addr == 32'h1000_0000);
+wire uart_reg_div_sel = mem_valid && (mem_addr == 32'h1000_0004);
 
-wire test_addr_sel = mem_valid && (mem_addr == 32'h1000_0000);
 wire done_addr_sel = mem_valid && (mem_addr == 32'h2000_0000);
 
 reg ram_ready;
@@ -165,8 +164,7 @@ always @(posedge clk)
     ram_ready <= (mem_la_read || mem_la_write) && mem_la_addr < 4*MEM_WORDS;
 
 // Drive picoRV inputs
-assign mem_ready = ram_ready ||
-    test_addr_sel || done_addr_sel ||
+assign mem_ready = ram_ready || done_addr_sel ||
     uart_reg_div_sel || (uart_reg_dat_sel && !uart_reg_dat_wait);
 
 assign mem_rdata =
@@ -193,5 +191,14 @@ assign uart_reg_dat_di = mem_wdata;
 
 // Drive top-level outputs
 assign ser_tx = uart_ser_tx;
+
+`ifdef SIM
+reg last_uart_sel;
+always @(clk) begin
+    last_uart_sel <= uart_reg_dat_sel && !uart_reg_dat_wait;
+    if (uart_reg_dat_sel && !uart_reg_dat_wait && !last_uart_sel)
+        $write("%c", mem_la_wdata[7:0]);
+end
+`endif
 
 endmodule

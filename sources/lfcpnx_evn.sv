@@ -60,8 +60,10 @@ assign picosoc_clk       = external_clock;
 assign picosoc_resetn    = external_resetn;
 assign picosoc_irq       = test_irq;
 
+`ifdef SIM
 assign trace_data  = picosoc_trace_data;
 assign trace_valid = picosoc_trace_valid;
 assign trap        = picosoc_trap;
+`endif
 
 endmodule

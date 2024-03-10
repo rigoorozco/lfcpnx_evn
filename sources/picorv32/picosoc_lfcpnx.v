@@ -126,7 +126,7 @@ wire        uart_resetn;
 wire        uart_ser_tx;
 wire        uart_ser_rx;
 
-wire  [3:0] uart_reg_div_we;
+wire [ 3:0] uart_reg_div_we;
 wire [31:0] uart_reg_div_di;
 wire [31:0] uart_reg_div_do;
 
@@ -173,7 +173,7 @@ assign mem_rdata =
 assign ram_clk  = clk;
 assign ram_addr = mem_la_addr[17:2];
 assign ram_din  = mem_la_wdata;
-assign ram_we   = mem_la_wstrb;
+assign ram_we   = mem_la_write ? mem_la_wstrb : 4'b0000;
 
 // Drive UART inputs
 assign uart_clk        = clk;

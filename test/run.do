@@ -28,6 +28,7 @@ vsim \
 view wave
 add wave /dut/*
 add wave /dut/picosoc/*
+add wave /dut/picosoc/ram/*
 add wave /dut/picosoc/ram/mem
 
 run -all

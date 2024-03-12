@@ -12,6 +12,7 @@ vlog -sv -mfcu \
 	"+incdir+/home/rigo/code/lfcpnx_evn/test" \
 -work work \
 	"/home/rigo/code/lfcpnx_evn/sources/lfcpnx_evn.sv" \
+	"/home/rigo/code/lfcpnx_evn/sources/misc/power_on_reset.v" \
 	"/home/rigo/code/lfcpnx_evn/sources/picorv32/bram_simple_sp.v" \
 	"/home/rigo/code/lfcpnx_evn/sources/picorv32/picosoc_lfcpnx.v" \
 	"/home/rigo/code/lfcpnx_evn/submodules/picorv32/picorv32.v" \
@@ -29,6 +30,6 @@ view wave
 add wave /dut/*
 add wave /dut/picosoc/*
 add wave /dut/picosoc/ram/*
-add wave /dut/picosoc/ram/mem
+add wave /dut/por/*
 
 run -all

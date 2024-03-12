@@ -2,7 +2,6 @@
 
 module lfcpnx_evn (
     input         external_clock,
-    input         external_resetn,
 
 `ifdef SIM
     output [35:0] trace_data,
@@ -12,6 +11,13 @@ module lfcpnx_evn (
 
     input         uart_rx,
     output        uart_tx
+);
+
+wire        resetn;
+
+power_on_reset por (
+    .clk    (external_clock),
+    .resetn (resetn)
 );
 
 wire        picosoc_clk;
@@ -44,7 +50,7 @@ reg [31:0] test_irq = 0;
 reg [15:0] count_cycle = 0;
 
 always @(posedge external_clock)
-    count_cycle <= external_resetn ? count_cycle + 1 : 0;
+    count_cycle <= resetn ? count_cycle + 1 : 0;
 
 always @* begin
     test_irq = 0;
@@ -57,7 +63,7 @@ assign picosoc_ser_rx    = uart_rx;
 
 // Inputs that need to be driven
 assign picosoc_clk       = external_clock;
-assign picosoc_resetn    = external_resetn;
+assign picosoc_resetn    = resetn;
 assign picosoc_irq       = test_irq;
 
 `ifdef SIM

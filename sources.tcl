@@ -4,6 +4,7 @@
 
 set project_files {
     ../sources/lfcpnx_evn.sv
+    ../sources/misc/power_on_reset.v
     ../sources/picorv32/bram_simple_sp.v
     ../sources/picorv32/picosoc_lfcpnx.v
     ../submodules/picorv32/picorv32.v

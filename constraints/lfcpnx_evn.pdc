@@ -1,0 +1,3 @@
+ldc_set_location -site {N25} [get_ports external_clock]
+ldc_set_location -site {L1} [get_ports uart_rx]
+ldc_set_location -site {L2} [get_ports uart_tx]

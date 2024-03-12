@@ -13,10 +13,19 @@ module lfcpnx_evn (
     output        uart_tx
 );
 
+wire        clock_62M5;
+
+pll_div div (
+    .clki_i  (external_clock),
+    .rstn_i  (1),
+    .clkop_o (clock_62M5),
+    .lock_o  (/*open*/)
+);
+
 wire        resetn;
 
 power_on_reset por (
-    .clk    (external_clock),
+    .clk    (clock_62M5),
     .resetn (resetn)
 );
 
@@ -33,7 +42,10 @@ wire [31:0] picosoc_eoi;
 wire        picosoc_trace_valid;
 wire [35:0] picosoc_trace_data;
 
-picosoc_lfcpnx picosoc (
+picosoc_lfcpnx #(
+    .CLOCK_RATE (62_500_000),
+    .UART_BAUD  (921_000)
+) picosoc (
     .clk          (picosoc_clk),
     .resetn       (picosoc_resetn),
     .trap         (picosoc_trap),
@@ -49,7 +61,7 @@ picosoc_lfcpnx picosoc (
 reg [31:0] test_irq = 0;
 reg [15:0] count_cycle = 0;
 
-always @(posedge external_clock)
+always @(posedge clock_62M5)
     count_cycle <= resetn ? count_cycle + 1 : 0;
 
 always @* begin
@@ -62,7 +74,7 @@ assign uart_tx           = picosoc_ser_tx;
 assign picosoc_ser_rx    = uart_rx;
 
 // Inputs that need to be driven
-assign picosoc_clk       = external_clock;
+assign picosoc_clk       = clock_62M5;
 assign picosoc_resetn    = resetn;
 assign picosoc_irq       = test_irq;
 

@@ -1,44 +1,46 @@
 // LFCPNX-EVN picoRV32 SoC
 
 module picosoc_lfcpnx #(
-	parameter [ 0:0] ENABLE_COUNTERS      = 1,
-	parameter [ 0:0] ENABLE_COUNTERS64    = 1,
-	parameter [ 0:0] ENABLE_REGS_16_31    = 1,
-	parameter [ 0:0] ENABLE_REGS_DUALPORT = 0,
-	parameter [ 0:0] TWO_STAGE_SHIFT      = 1,
-	parameter [ 0:0] BARREL_SHIFTER       = 0,
-	parameter [ 0:0] TWO_CYCLE_COMPARE    = 0,
-	parameter [ 0:0] TWO_CYCLE_ALU        = 0,
-	parameter [ 0:0] COMPRESSED_ISA       = 1,
-	parameter [ 0:0] CATCH_MISALIGN       = 1,
-	parameter [ 0:0] CATCH_ILLINSN        = 1,
-	parameter [ 0:0] ENABLE_PCPI          = 0,
-	parameter [ 0:0] ENABLE_MUL           = 1,
-	parameter [ 0:0] ENABLE_FAST_MUL      = 0,
-	parameter [ 0:0] ENABLE_DIV           = 1,
-	parameter [ 0:0] ENABLE_IRQ           = 1,
-	parameter [ 0:0] ENABLE_IRQ_QREGS     = 1,
-	parameter [ 0:0] ENABLE_IRQ_TIMER     = 1,
-	parameter [ 0:0] ENABLE_TRACE         = 1,
-	parameter [ 0:0] REGS_INIT_ZERO       = 0,
-	parameter [31:0] MASKED_IRQ           = 32'h0000_0000,
-	parameter [31:0] LATCHED_IRQ          = 32'hffff_ffff,
-	parameter [31:0] PROGADDR_RESET       = 32'h0000_0000,
-	parameter [31:0] PROGADDR_IRQ         = 32'h0000_0010,
-	parameter [31:0] STACKADDR            = 32'hffff_ffff
+    parameter [ 0:0] ENABLE_COUNTERS      = 1,
+    parameter [ 0:0] ENABLE_COUNTERS64    = 1,
+    parameter [ 0:0] ENABLE_REGS_16_31    = 1,
+    parameter [ 0:0] ENABLE_REGS_DUALPORT = 0,
+    parameter [ 0:0] TWO_STAGE_SHIFT      = 1,
+    parameter [ 0:0] BARREL_SHIFTER       = 0,
+    parameter [ 0:0] TWO_CYCLE_COMPARE    = 0,
+    parameter [ 0:0] TWO_CYCLE_ALU        = 0,
+    parameter [ 0:0] COMPRESSED_ISA       = 1,
+    parameter [ 0:0] CATCH_MISALIGN       = 1,
+    parameter [ 0:0] CATCH_ILLINSN        = 1,
+    parameter [ 0:0] ENABLE_PCPI          = 0,
+    parameter [ 0:0] ENABLE_MUL           = 1,
+    parameter [ 0:0] ENABLE_FAST_MUL      = 0,
+    parameter [ 0:0] ENABLE_DIV           = 1,
+    parameter [ 0:0] ENABLE_IRQ           = 1,
+    parameter [ 0:0] ENABLE_IRQ_QREGS     = 1,
+    parameter [ 0:0] ENABLE_IRQ_TIMER     = 1,
+    parameter [ 0:0] ENABLE_TRACE         = 1,
+    parameter [ 0:0] REGS_INIT_ZERO       = 0,
+    parameter [31:0] MASKED_IRQ           = 32'h0000_0000,
+    parameter [31:0] LATCHED_IRQ          = 32'hffff_ffff,
+    parameter [31:0] PROGADDR_RESET       = 32'h0000_0000,
+    parameter [31:0] PROGADDR_IRQ         = 32'h0000_0010,
+    parameter [31:0] STACKADDR            = 32'hffff_ffff,
+    parameter        CLOCK_RATE           = 50_000_0000,
+    parameter        UART_BAUD            = 921600
 ) (
     input         clk,
     input         resetn,
-	output        trap,
+    output        trap,
 
-	output        ser_tx,
-	input         ser_rx,
+    output        ser_tx,
+    input         ser_rx,
 
     input  [31:0] irq,
-	output [31:0] eoi,
+    output [31:0] eoi,
 
     output        trace_valid,
-	output [35:0] trace_data
+    output [35:0] trace_data
 );
 
 localparam MEM_WORDS = 65536;
@@ -137,7 +139,7 @@ wire [31:0] uart_reg_dat_do;
 wire        uart_reg_dat_wait;
 
 simpleuart #(
-    .DEFAULT_DIV (54)
+    .DEFAULT_DIV (CLOCK_RATE/UART_BAUD)
 ) uart (
     .clk         (uart_clk),
     .resetn      (uart_resetn),

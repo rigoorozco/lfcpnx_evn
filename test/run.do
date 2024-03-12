@@ -13,6 +13,7 @@ vlog -sv -mfcu \
 -work work \
 	"/home/rigo/code/lfcpnx_evn/sources/lfcpnx_evn.sv" \
 	"/home/rigo/code/lfcpnx_evn/sources/misc/power_on_reset.v" \
+	"/home/rigo/code/lfcpnx_evn/sources/misc/pll_div.v" \
 	"/home/rigo/code/lfcpnx_evn/sources/picorv32/bram_simple_sp.v" \
 	"/home/rigo/code/lfcpnx_evn/sources/picorv32/picosoc_lfcpnx.v" \
 	"/home/rigo/code/lfcpnx_evn/submodules/picorv32/picorv32.v" \

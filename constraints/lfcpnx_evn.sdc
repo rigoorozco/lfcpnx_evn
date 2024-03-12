@@ -1,1 +1,1 @@
-create_clock -name ext_clock -period 8 [get_ports external_clock]
+create_clock -name ext_clock -period 16 [get_ports external_clock]

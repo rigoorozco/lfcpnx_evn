@@ -1,11 +1,13 @@
 # Create project for LFCPNX-EVN board
 
-if { $argc != 1 } {
-    puts "Name for the project must be provided!"
+if { $argc != 2 } {
+    puts "Usage:"
+    puts "   create_project.tcl <project_name (string)> <use_ip_eval (bool)>"
     exit 1
 }
 
 set project_name "[lindex $argv 0]"
+set use_ip_eval "[lindex $argv 1]"
 
 prj_create \
     -name $project_name \
@@ -21,6 +23,8 @@ foreach file $project_files {
 }
 
 prj_set_top_module lfcpnx_evn
+
+prj_set_strategy_value bit_ip_eval=$use_ip_eval
 
 prj_save
 prj_close
